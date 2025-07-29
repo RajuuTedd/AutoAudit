@@ -1,0 +1,57 @@
+[
+  {
+    "_id": "test-ssl-check",
+    "name": "SSL/TLS Check",
+    "tool": "SSL Labs API",
+    "command": "https://api.ssllabs.com/api/v3/analyze?host=example.com",
+    "requirement_ids": [
+      "req-https",
+      "req-encryption"
+    ]
+  },
+  {
+    "_id": "test-cookie-security",
+    "name": "Cookie Security Check",
+    "tool": "OWASP ZAP",
+    "command": "zap-cli spider https://example.com && zap-cli alerts --base | grep Cookie",
+    "requirement_ids": [
+      "req-secure-cookies"
+    ]
+  },
+  {
+    "_id": "test-accessibility-axe",
+    "name": "Accessibility Alt Text",
+    "tool": "axe CLI",
+    "command": "axe https://example.com --rules image-alt",
+    "requirement_ids": [
+      "req-image-alt"
+    ]
+  },
+  {
+    "_id": "test-policy-detection",
+    "name": "Privacy Policy Detection",
+    "tool": "Puppeteer",
+    "command": "Scrape and search for privacy link or document text",
+    "requirement_ids": [
+      "req-privacy-policy"
+    ]
+  },
+  {
+    "_id": "test-header-csp",
+    "name": "CSP Header Check",
+    "tool": "curl",
+    "command": "curl -I https://example.com | grep Content-Security-Policy",
+    "requirement_ids": [
+      "req-csp"
+    ]
+  },
+  {
+    "_id": "test-nikto-scan",
+    "name": "Nikto Vulnerability Scan",
+    "tool": "Nikto",
+    "command": "nikto -host https://example.com -output nikto.txt",
+    "requirement_ids": [
+      "req-vulnerability-scan"
+    ]
+  }
+]
