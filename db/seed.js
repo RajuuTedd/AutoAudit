@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const fs = require("fs");
 const path = require("path");
-require("dotenv").config();
+require("dotenv").config({ path: path.join(__dirname, "../server/.env") });
 
 const loadJSON = (filename) =>
   JSON.parse(fs.readFileSync(path.join(__dirname, "seeds", filename), "utf-8"));
@@ -23,7 +23,9 @@ async function seedDatabase() {
     console.log("📥 Inserting fresh seed data...");
     await db.collection("regulations").insertMany(loadJSON("regulations.json"));
     await db.collection("rules").insertMany(loadJSON("rules.json"));
-    await db.collection("requirements").insertMany(loadJSON("requirements.json"));
+    await db
+      .collection("requirements")
+      .insertMany(loadJSON("requirements.json"));
     await db.collection("tests").insertMany(loadJSON("tests.json"));
 
     console.log("✅ Seeded database successfully");

@@ -1,6 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const scanRoutes = require("./routes/scanRoutes");
 require("dotenv").config();
 
 const scanRoutes = require("./routes/scanRoutes");
@@ -9,7 +10,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.use("/api/scan", scanRoutes);
+app.use("/api", scanRoutes);
 
 mongoose
   .connect(process.env.MONGO_URI)
