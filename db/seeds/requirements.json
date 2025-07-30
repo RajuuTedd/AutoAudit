@@ -1,0 +1,104 @@
+[
+  {
+    "_id": "req-https",
+    "description": "All services must use HTTPS with valid TLS certs",
+    "fix_suggestion": "Install valid SSL cert, force HTTPS redirection",
+    "rule_ids": [
+      "gdpr-5-1-f",
+      "dpdp-8-5"
+    ],
+    "test_ids": [
+      "test-ssl-check"
+    ]
+  },
+  {
+    "_id": "req-secure-cookies",
+    "description": "All cookies must be set with Secure, HttpOnly, and SameSite attributes",
+    "fix_suggestion": "Add secure flags to cookie headers",
+    "rule_ids": [
+      "gdpr-5-1-f",
+      "dpdp-8-5"
+    ],
+    "test_ids": [
+      "test-cookie-security"
+    ]
+  },
+  {
+    "_id": "req-encryption",
+    "description": "Data in transit must be encrypted",
+    "fix_suggestion": "Use HTTPS and disable insecure protocols",
+    "rule_ids": [
+      "dpdp-8-5"
+    ],
+    "test_ids": [
+      "test-ssl-check"
+    ]
+  },
+  {
+    "_id": "req-image-alt",
+    "description": "All images must have alt text for accessibility",
+    "fix_suggestion": "Add `alt` attribute to all `<img>` tags",
+    "rule_ids": [
+      "wcag-1-1-1"
+    ],
+    "test_ids": [
+      "test-accessibility-axe"
+    ]
+  },
+  {
+    "_id": "req-privacy-policy",
+    "description": "Website must have a clear, accessible privacy policy",
+    "fix_suggestion": "Add a privacy policy page and link it prominently",
+    "rule_ids": [
+      "gdpr-6-1",
+      "dpdp-7-1"
+    ],
+    "test_ids": [
+      "test-policy-detection"
+    ]
+  },
+  {
+    "_id": "req-csp",
+    "description": "Content-Security-Policy header must be present",
+    "fix_suggestion": "Add a strong CSP header to HTTP responses",
+    "rule_ids": [
+      "gdpr-32"
+    ],
+    "test_ids": [
+      "test-header-csp"
+    ]
+  },
+  {
+    "_id": "req-vulnerability-scan",
+    "description": "Run periodic vulnerability scans and address issues",
+    "fix_suggestion": "Use scanners like Nikto and ZAP to identify issues",
+    "rule_ids": [
+      "dpdp-8-6"
+    ],
+    "test_ids": [
+      "test-nikto-scan"
+    ]
+  },
+  {
+    "_id": "req-contrast",
+    "description": "Ensure sufficient contrast ratio between text and background",
+    "fix_suggestion": "Adjust colors to meet minimum 4.5:1 contrast",
+    "rule_ids": [
+      "wcag-1-4-3"
+    ],
+    "test_ids": [
+      "test-accessibility-axe"
+    ]
+  },
+  {
+    "_id": "req-skip-link",
+    "description": "Provide skip links for keyboard navigation",
+    "fix_suggestion": "Add a skip-to-main-content link at the top of pages",
+    "rule_ids": [
+      "wcag-2-4-1"
+    ],
+    "test_ids": [
+      "test-accessibility-axe"
+    ]
+  }
+]

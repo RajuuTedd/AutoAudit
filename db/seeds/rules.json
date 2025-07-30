@@ -1,0 +1,97 @@
+[
+  {
+    "_id": "gdpr-5-1-f",
+    "regulation_id": "gdpr",
+    "article_number": "5(1)(f)",
+    "title": "Integrity and confidentiality",
+    "description": "Data must be processed securely...",
+    "requirement_ids": [
+      "req-https",
+      "req-secure-cookies"
+    ]
+  },
+  {
+    "_id": "dpdp-8-5",
+    "regulation_id": "dpdp",
+    "article_number": "8(5)",
+    "title": "Reasonable security safeguards",
+    "description": "Ensure protection of personal data against breaches",
+    "requirement_ids": [
+      "req-https",
+      "req-secure-cookies",
+      "req-encryption"
+    ]
+  },
+  {
+    "_id": "wcag-1-1-1",
+    "regulation_id": "wcag",
+    "article_number": "1.1.1",
+    "title": "Non-text Content",
+    "description": "Provide text alternatives for non-text content",
+    "requirement_ids": [
+      "req-image-alt"
+    ]
+  },
+  {
+    "_id": "gdpr-6-1",
+    "regulation_id": "gdpr",
+    "article_number": "6(1)",
+    "title": "Lawfulness of processing",
+    "description": "Processing must be lawful, fair, and transparent",
+    "requirement_ids": [
+      "req-privacy-policy"
+    ]
+  },
+  {
+    "_id": "gdpr-32",
+    "regulation_id": "gdpr",
+    "article_number": "32",
+    "title": "Security of processing",
+    "description": "Implement appropriate technical and organizational measures to ensure a level of security appropriate to the risk",
+    "requirement_ids": [
+      "req-https",
+      "req-encryption",
+      "req-csp"
+    ]
+  },
+  {
+    "_id": "dpdp-7-1",
+    "regulation_id": "dpdp",
+    "article_number": "7(1)",
+    "title": "Notice obligations",
+    "description": "Data fiduciaries must give notice to data principals",
+    "requirement_ids": [
+      "req-privacy-policy"
+    ]
+  },
+  {
+    "_id": "dpdp-8-6",
+    "regulation_id": "dpdp",
+    "article_number": "8(6)",
+    "title": "Security audits",
+    "description": "Conduct periodic technical and compliance audits",
+    "requirement_ids": [
+      "req-vulnerability-scan"
+    ]
+  },
+  {
+    "_id": "wcag-1-4-3",
+    "regulation_id": "wcag",
+    "article_number": "1.4.3",
+    "title": "Contrast (Minimum)",
+    "description": "Text must have sufficient contrast ratio",
+    "requirement_ids": [
+      "req-contrast"
+    ]
+  },
+  {
+    "_id": "wcag-2-4-1",
+    "regulation_id": "wcag",
+    "article_number": "2.4.1",
+    "title": "Bypass Blocks",
+    "description": "Provide a mechanism to skip navigation",
+    "requirement_ids": [
+      "req-skip-link"
+    ]
+  }
+]
