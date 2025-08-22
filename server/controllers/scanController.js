@@ -120,7 +120,7 @@ exports.runScan = async (req, res) => {
     const results = await testRunnerService.runAllTests(url);
 
     // Build final report with DB enrichment
-    const report = await reportBuilderService.buildReport(results);
+    const report = await reportBuilderService.buildReport(results, { url });
 
     return res.json(report);
   } catch (err) {
