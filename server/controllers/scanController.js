@@ -122,9 +122,9 @@ exports.runScan = async (req, res) => {
     // Build final report with DB enrichment
     const report = await reportBuilderService.buildReport(results);
 
-    res.json(report);
+    return res.json(report);
   } catch (err) {
     console.error("❌ Scan Error:", err.message);
-    res.status(500).json({ error: err.message || "Test execution failed" });
+    return res.status(500).json({ error: err.message || "Scan failed" });
   }
 };

@@ -14,7 +14,7 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 
 // ✅ Use routes
-app.use("/api/scan", scanRoutes);
+app.use("/api", scanRoutes);
 
 // ✅ Connect MongoDB
 mongoose
