@@ -1,32 +1,13 @@
-// const sslLabsService = require("./sslLabsService");
-// const sslLabsParser = require("../parsers/sslLabsParser");
-
-// exports.runAllTests = async (url) => {
-//   const results = [];
-
-//   // SSL Labs (example)
-//   try {
-//     const sslRaw = await sslLabsService.runScan(url);  // external tool/API/CLI
-//     const sslResult = sslLabsParser.parse(sslRaw);     // normalize
-//     results.push(sslResult);
-//   } catch (e) {
-//     results.push({
-//       testName: "SSL Labs Scan",
-//       status: "ERROR",
-//       details: { reason: e.message || "Unknown error" },
-//       violations: []
-//     });
-//   }
-
-//   return results;
-// };
-
 const Test = require("../models/testModel");
+
 const sslLabsService = require("./sslLabsService");
 const sslLabsParser  = require("../parsers/sslLabsParser");
 
 const axeService = require("./axeService");
 const axeParser  = require("../parsers/axeParser");
+
+const niktoService = require("./niktoService");
+const niktoParser  = require("../parsers/niktoParser");
 
 /**
  * Attach DB test metadata (id + name) to a normalized result,
@@ -81,6 +62,19 @@ exports.runAllTests = async (url) => {
     results.push(axeResult);
   } catch (e) {
     results.push({ status: "ERROR", details: { reason: e.message || "Unknown error" } });
+  }
+
+  // --- Nikto ---
+  try {
+    const niktoRaw = await niktoService.runScan(url);
+    let niktoResult = niktoParser.parse(niktoRaw);
+    niktoResult = await attachTestMeta(niktoResult, {
+      toolLike: "nikto",
+      commandRegex: /nikto/i
+    });
+    results.push(niktoResult);
+  } catch (e) {
+    results.push({ status: "ERROR", details: { reason: e.message } });
   }
 
   return results;

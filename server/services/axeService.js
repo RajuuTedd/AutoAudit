@@ -71,7 +71,6 @@ function runAxeCLI(targetUrl, { timeoutMs = 90000 } = {}) {
       if (timedOut) return;
 
       const combined = `${stdout}\n${stderr}`.trim();
-      console.log("🧪 axe preview:", combined.slice(0, 300));
 
       // Common failure hint: wrong binary (shouldn’t happen with --package)
       if (/unknown option\s+-f/i.test(combined) || /command not found:\s*axe/i.test(combined)) {
