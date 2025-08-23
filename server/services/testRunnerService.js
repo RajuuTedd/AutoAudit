@@ -25,6 +25,9 @@ const Test = require("../models/testModel");
 const sslLabsService = require("./sslLabsService");
 const sslLabsParser  = require("../parsers/sslLabsParser");
 
+const axeService = require("./axeService");
+const axeParser  = require("../parsers/axeParser");
+
 /**
  * Attach DB test metadata (id + name) to a normalized result,
  * by matching the seed's `tool` or `command` (no hardcoded names).
@@ -65,6 +68,19 @@ exports.runAllTests = async (url) => {
       status: "ERROR",
       details: { reason: e.message || "Unknown error" }
     });
+  }
+
+  // ---- Axe CLI ----
+  try {
+    const axeRaw    = await axeService.runScan(url);
+    let   axeResult = axeParser.parse(axeRaw);
+    axeResult = await attachTestMeta(axeResult, {
+      toolLike: "axe",                                  // matches "axe", "axe-core"
+      commandRegex: /@axe-core\/cli/i
+    });
+    results.push(axeResult);
+  } catch (e) {
+    results.push({ status: "ERROR", details: { reason: e.message || "Unknown error" } });
   }
 
   return results;
