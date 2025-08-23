@@ -3,102 +3,182 @@
     "_id": "req-https",
     "description": "All services must use HTTPS with valid TLS certs",
     "fix_suggestion": "Install valid SSL cert, force HTTPS redirection",
-    "rule_ids": [
-      "gdpr-5-1-f",
-      "dpdp-8-5"
-    ],
-    "test_ids": [
-      "test-ssl-check"
-    ]
-  },
-  {
-    "_id": "req-secure-cookies",
-    "description": "All cookies must be set with Secure, HttpOnly, and SameSite attributes",
-    "fix_suggestion": "Add secure flags to cookie headers",
-    "rule_ids": [
-      "gdpr-5-1-f",
-      "dpdp-8-5"
-    ],
-    "test_ids": [
-      "test-cookie-security"
-    ]
+    "rule_ids": ["gdpr-5-1-f", "gdpr-32", "dpdp-8-5"],
+    "test_ids": ["test-ssl-check"]
   },
   {
     "_id": "req-encryption",
     "description": "Data in transit must be encrypted",
     "fix_suggestion": "Use HTTPS and disable insecure protocols",
-    "rule_ids": [
-      "dpdp-8-5"
-    ],
-    "test_ids": [
-      "test-ssl-check"
-    ]
+    "rule_ids": ["gdpr-32", "dpdp-8-5"],
+    "test_ids": ["test-ssl-check"]
   },
   {
-    "_id": "req-image-alt",
-    "description": "All images must have alt text for accessibility",
-    "fix_suggestion": "Add `alt` attribute to all `<img>` tags",
-    "rule_ids": [
-      "wcag-1-1-1"
-    ],
-    "test_ids": [
-      "test-accessibility-axe"
-    ]
+    "_id": "req-hsts",
+    "description": "Enable HTTP Strict Transport Security (HSTS)",
+    "fix_suggestion": "Add HSTS header with a sufficient max-age and includeSubDomains",
+    "rule_ids": ["gdpr-5-1-f", "gdpr-32", "dpdp-8-5"],
+    "test_ids": ["test-ssl-check"]
+  },
+  {
+    "_id": "req-tls12",
+    "description": "Enforce TLS 1.2+ and disable weak ciphers",
+    "fix_suggestion": "Disable TLS 1.0/1.1 and legacy ciphers; prefer TLS 1.2/1.3",
+    "rule_ids": ["gdpr-32", "dpdp-8-5"],
+    "test_ids": ["test-ssl-check"]
   },
   {
     "_id": "req-privacy-policy",
     "description": "Website must have a clear, accessible privacy policy",
     "fix_suggestion": "Add a privacy policy page and link it prominently",
-    "rule_ids": [
-      "gdpr-6-1",
-      "dpdp-7-1"
-    ],
-    "test_ids": [
-      "test-policy-detection"
-    ]
+    "rule_ids": ["dpdp-7-1"],
+    "test_ids": ["test-policy-detection"]
   },
   {
-    "_id": "req-csp",
-    "description": "Content-Security-Policy header must be present",
-    "fix_suggestion": "Add a strong CSP header to HTTP responses",
-    "rule_ids": [
-      "gdpr-32"
-    ],
-    "test_ids": [
-      "test-header-csp"
-    ]
+    "_id": "req-privacy-link-visible",
+    "description": "Privacy policy must be clearly discoverable from the homepage",
+    "fix_suggestion": "Add a prominent 'Privacy Policy' link in header/footer",
+    "rule_ids": ["gdpr-12", "dpdp-7-1"],
+    "test_ids": ["test-policy-detection"]
   },
   {
-    "_id": "req-vulnerability-scan",
-    "description": "Run periodic vulnerability scans and address issues",
-    "fix_suggestion": "Use scanners like Nikto and ZAP to identify issues",
-    "rule_ids": [
-      "dpdp-8-6"
-    ],
-    "test_ids": [
-      "test-nikto-scan"
-    ]
+    "_id": "req-privacy-controller-identity",
+    "description": "Privacy policy must identify the data controller and contact details",
+    "fix_suggestion": "Include company/legal entity name, address, and contact email",
+    "rule_ids": ["gdpr-13-1-a", "dpdp-7-1"],
+    "test_ids": ["test-policy-detection"]
+  },
+  {
+    "_id": "req-privacy-data-sharing",
+    "description": "Disclose recipients or categories of recipients of personal data",
+    "fix_suggestion": "List vendors/partners or categories with whom data is shared",
+    "rule_ids": ["gdpr-13-1-e", "dpdp-7-1"],
+    "test_ids": ["test-policy-detection"]
+  },
+  {
+    "_id": "req-image-alt",
+    "description": "All images must have alt text for accessibility",
+    "fix_suggestion": "Add `alt` attribute to all <img> tags",
+    "rule_ids": ["wcag-1-1-1"],
+    "test_ids": ["test-accessibility-axe"]
   },
   {
     "_id": "req-contrast",
     "description": "Ensure sufficient contrast ratio between text and background",
     "fix_suggestion": "Adjust colors to meet minimum 4.5:1 contrast",
-    "rule_ids": [
-      "wcag-1-4-3"
-    ],
-    "test_ids": [
-      "test-accessibility-axe"
-    ]
+    "rule_ids": ["wcag-1-4-3"],
+    "test_ids": ["test-accessibility-axe"]
   },
   {
     "_id": "req-skip-link",
-    "description": "Provide skip links for keyboard navigation",
-    "fix_suggestion": "Add a skip-to-main-content link at the top of pages",
-    "rule_ids": [
-      "wcag-2-4-1"
-    ],
-    "test_ids": [
-      "test-accessibility-axe"
-    ]
-  }
+    "description": "Provide a 'Skip to main content' mechanism",
+    "fix_suggestion": "Add a visible skip link that targets the main content region",
+    "rule_ids": ["wcag-2-4-1"],
+    "test_ids": ["test-accessibility-axe"]
+  },
+  {
+    "_id": "req-h1-heading",
+    "description": "Page should contain one clear, descriptive H1 heading",
+    "fix_suggestion": "Add a single H1 summarizing page purpose",
+    "rule_ids": ["wcag-2-4-6"],
+    "test_ids": ["test-accessibility-axe"]
+  },
+  {
+    "_id": "req-form-labels",
+    "description": "All form inputs must have associated, descriptive labels",
+    "fix_suggestion": "Use <label for> or aria-label/aria-labelledby appropriately",
+    "rule_ids": ["wcag-3-3-2", "wcag-1-3-1", "wcag-2-4-6"],
+    "test_ids": ["test-accessibility-axe"]
+  },
+  {
+    "_id": "req-aria-roles",
+    "description": "Components must expose correct ARIA roles, names, and values",
+    "fix_suggestion": "Ensure interactive controls have proper role and accessible name",
+    "rule_ids": ["wcag-4-1-2"],
+    "test_ids": ["test-accessibility-axe"]
+  },
+  {
+    "_id": "req-landmarks",
+    "description": "Use structural landmarks (header, main, nav, footer) correctly",
+    "fix_suggestion": "Add or fix landmark roles/regions so content is contained",
+    "rule_ids": ["wcag-1-3-1"],
+    "test_ids": ["test-accessibility-axe"]
+  },
+  {
+    "_id": "req-keyboard-focus",
+    "description": "All functionality operable by keyboard; focus is visible",
+    "fix_suggestion": "Ensure focusable elements and visible focus styles; remove keyboard traps",
+    "rule_ids": ["wcag-2-1-1", "wcag-2-4-7"],
+    "test_ids": ["test-accessibility-axe"]
+  },
+  {
+    "_id": "req-csp",
+    "description": "Set a Content-Security-Policy header to mitigate XSS",
+    "fix_suggestion": "Add a strict CSP (default-src 'self'; object-src 'none'; frame-ancestors 'none'; ...)",
+    "rule_ids": ["gdpr-5-1-f", "gdpr-32"],
+    "test_ids": ["test-header-csp"]
+  },
+  {
+    "_id": "req-xfo",
+    "description": "Set X-Frame-Options (or frame-ancestors) to prevent clickjacking",
+    "fix_suggestion": "Use X-Frame-Options: DENY or SAMEORIGIN (prefer CSP frame-ancestors)",
+    "rule_ids": ["gdpr-5-1-f"],
+    "test_ids": ["test-header-xfo"]
+  },
+  {
+    "_id": "req-xcto",
+    "description": "Set X-Content-Type-Options: nosniff",
+    "fix_suggestion": "Return X-Content-Type-Options: nosniff on all responses",
+    "rule_ids": ["gdpr-5-1-f"],
+    "test_ids": ["test-header-xcto"]
+  },
+  {
+    "_id": "req-referrer",
+    "description": "Set an appropriate Referrer-Policy to limit sensitive referrer data",
+    "fix_suggestion": "Use Referrer-Policy: no-referrer or strict-origin-when-cross-origin",
+    "rule_ids": ["gdpr-5-1-f"],
+    "test_ids": ["test-header-referrer"]
+  },
+  {
+    "_id": "req-secure-cookies",
+    "description": "Cookies must use Secure and HttpOnly (and SameSite where applicable)",
+    "fix_suggestion": "Set Secure, HttpOnly, SameSite=Lax/Strict for session cookies; avoid sensitive cookies in JS",
+    "rule_ids": ["gdpr-5-1-f", "dpdp-8-5"],
+    "test_ids": ["test-cookie-security", "test-cookie-banner"]
+  },
+  {
+    "_id": "req-vulnerability-scan",
+    "description": "Run periodic vulnerability scans and address issues",
+    "fix_suggestion": "Use scanners like Nikto and ZAP to identify issues",
+    "rule_ids": ["dpdp-8-6", "gdpr-32"],
+    "test_ids": ["test-nikto-scan"]
+  },
+  {
+    "_id": "req-server-version",
+    "description": "Avoid exposing server software version in responses",
+    "fix_suggestion": "Disable Server header/version leakage",
+    "rule_ids": ["dpdp-8-6", "gdpr-32"],
+    "test_ids": ["test-nikto-scan"]
+  },
+  {
+  "_id": "req-dir-listing",
+  "description": "Disable directory listing on web servers",
+  "fix_suggestion": "Turn off autoindex / directory browsing in server config (e.g., Apache, Nginx)",
+  "rule_ids": ["gdpr-32", "dpdp-8-6"],
+  "test_ids": ["test-nikto-scan"]
+},
+{
+  "_id": "req-default-credentials",
+  "description": "Ensure no default credentials or sample applications are accessible",
+  "fix_suggestion": "Remove default admin accounts, sample apps, and change all factory-set passwords",
+  "rule_ids": ["gdpr-32", "dpdp-8-6"],
+  "test_ids": ["test-nikto-scan"]
+},
+{
+  "_id": "req-outdated-software",
+  "description": "Identify and update outdated server software or libraries",
+  "fix_suggestion": "Patch or upgrade server software and third-party libraries flagged as outdated",
+  "rule_ids": ["gdpr-32", "dpdp-8-6"],
+  "test_ids": ["test-nikto-scan"]
+}
 ]

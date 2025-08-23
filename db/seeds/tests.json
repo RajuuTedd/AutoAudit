@@ -4,54 +4,79 @@
     "name": "SSL/TLS Check",
     "tool": "SSL Labs API",
     "command": "https://api.ssllabs.com/api/v3/analyze?host=example.com",
-    "requirement_ids": [
-      "req-https",
-      "req-encryption"
-    ]
+    "requirement_ids": ["req-https", "req-encryption", "req-hsts", "req-tls12"]
   },
-  {
-    "_id": "test-cookie-security",
-    "name": "Cookie Security Check",
-    "tool": "OWASP ZAP",
-    "command": "zap-cli spider https://example.com && zap-cli alerts --base | grep Cookie",
-    "requirement_ids": [
-      "req-secure-cookies"
-    ]
-  },
+
   {
     "_id": "test-accessibility-axe",
-    "name": "Accessibility Alt Text",
+    "name": "Accessibility Scan (axe)",
     "tool": "axe CLI",
-    "command": "axe https://example.com --rules image-alt",
+    "command": "axe https://example.com --stdout",
+    "requirement_ids": ["req-image-alt", "req-contrast", "req-skip-link", "req-h1-heading", "req-form-labels", "req-aria-roles", "req-landmarks", "req-keyboard-focus"]
+  },
+
+  {
+    "_id": "test-nikto-scan",
+    "name": "Nikto Vulnerability Scan",
+    "tool": "Nikto",
+    "command": "nikto -h example.com -nointeractive -maxtime 60 -timeout 5",
     "requirement_ids": [
-      "req-image-alt"
+      "req-vulnerability-scan",
+      "req-server-version",
+      "req-dir-listing",
+      "req-default-credentials",
+      "req-outdated-software"
     ]
   },
+
+  {
+    "_id": "test-header-csp",
+    "name": "CSP Header Check",
+    "tool": "curl",
+    "command": "curl -sI https://example.com | grep -i 'content-security-policy'",
+    "requirement_ids": ["req-csp"]
+  },
+  {
+    "_id": "test-header-xfo",
+    "name": "X-Frame-Options Check",
+    "tool": "curl",
+    "command": "curl -sI https://example.com | grep -i 'x-frame-options'",
+    "requirement_ids": ["req-xfo"]
+  },
+  {
+    "_id": "test-header-xcto",
+    "name": "X-Content-Type-Options Check",
+    "tool": "curl",
+    "command": "curl -sI https://example.com | grep -i 'x-content-type-options'",
+    "requirement_ids": ["req-xcto"]
+  },
+  {
+    "_id": "test-header-referrer",
+    "name": "Referrer-Policy Check",
+    "tool": "curl",
+    "command": "curl -sI https://example.com | grep -i 'referrer-policy'",
+    "requirement_ids": ["req-referrer"]
+  },
+
   {
     "_id": "test-policy-detection",
     "name": "Privacy Policy Detection",
     "tool": "Puppeteer",
     "command": "Scrape and search for privacy link or document text",
-    "requirement_ids": [
-      "req-privacy-policy"
-    ]
+    "requirement_ids": ["req-privacy-policy", "req-privacy-link-visible", "req-privacy-controller-identity", "req-privacy-data-sharing"]
   },
   {
-    "_id": "test-header-csp",
-    "name": "CSP Header Check",
-    "tool": "curl",
-    "command": "curl -I https://example.com | grep Content-Security-Policy",
-    "requirement_ids": [
-      "req-csp"
-    ]
+    "_id": "test-cookie-security",
+    "name": "Cookie Security Check (Headers or DOM)",
+    "tool": "Puppeteer",
+    "command": "Inspect Set-Cookie / document.cookie attributes for flags",
+    "requirement_ids": ["req-secure-cookies"]
   },
   {
-    "_id": "test-nikto-scan",
-    "name": "Nikto Vulnerability Scan",
-    "tool": "Nikto",
-    "command": "nikto -host https://example.com -output nikto.txt",
-    "requirement_ids": [
-      "req-vulnerability-scan"
-    ]
+    "_id": "test-cookie-banner",
+    "name": "Cookie Banner / Consent UI",
+    "tool": "Puppeteer",
+    "command": "Detect presence of cookie consent banner and interactions",
+    "requirement_ids": ["req-secure-cookies"]
   }
 ]
