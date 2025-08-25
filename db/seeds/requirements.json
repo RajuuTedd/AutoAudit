@@ -70,27 +70,6 @@
     "test_ids": ["test-accessibility-axe"]
   },
   {
-    "_id": "req-skip-link",
-    "description": "Provide a 'Skip to main content' mechanism",
-    "fix_suggestion": "Add a visible skip link that targets the main content region",
-    "rule_ids": ["wcag-2-4-1"],
-    "test_ids": ["test-accessibility-axe"]
-  },
-  {
-    "_id": "req-h1-heading",
-    "description": "Page should contain one clear, descriptive H1 heading",
-    "fix_suggestion": "Add a single H1 summarizing page purpose",
-    "rule_ids": ["wcag-2-4-6"],
-    "test_ids": ["test-accessibility-axe"]
-  },
-  {
-    "_id": "req-form-labels",
-    "description": "All form inputs must have associated, descriptive labels",
-    "fix_suggestion": "Use <label for> or aria-label/aria-labelledby appropriately",
-    "rule_ids": ["wcag-3-3-2", "wcag-1-3-1", "wcag-2-4-6"],
-    "test_ids": ["test-accessibility-axe"]
-  },
-  {
     "_id": "req-aria-roles",
     "description": "Components must expose correct ARIA roles, names, and values",
     "fix_suggestion": "Ensure interactive controls have proper role and accessible name",
@@ -98,17 +77,10 @@
     "test_ids": ["test-accessibility-axe"]
   },
   {
-    "_id": "req-landmarks",
-    "description": "Use structural landmarks (header, main, nav, footer) correctly",
-    "fix_suggestion": "Add or fix landmark roles/regions so content is contained",
-    "rule_ids": ["wcag-1-3-1"],
-    "test_ids": ["test-accessibility-axe"]
-  },
-  {
     "_id": "req-keyboard-focus",
     "description": "All functionality operable by keyboard; focus is visible",
     "fix_suggestion": "Ensure focusable elements and visible focus styles; remove keyboard traps",
-    "rule_ids": ["wcag-2-1-1", "wcag-2-4-7"],
+    "rule_ids": ["wcag-2-1-1"],
     "test_ids": ["test-accessibility-axe"]
   },
   {
@@ -161,24 +133,24 @@
     "test_ids": ["test-nikto-scan"]
   },
   {
-  "_id": "req-dir-listing",
-  "description": "Disable directory listing on web servers",
-  "fix_suggestion": "Turn off autoindex / directory browsing in server config (e.g., Apache, Nginx)",
-  "rule_ids": ["gdpr-32", "dpdp-8-6"],
-  "test_ids": ["test-nikto-scan"]
-},
-{
-  "_id": "req-default-credentials",
-  "description": "Ensure no default credentials or sample applications are accessible",
-  "fix_suggestion": "Remove default admin accounts, sample apps, and change all factory-set passwords",
-  "rule_ids": ["gdpr-32", "dpdp-8-6"],
-  "test_ids": ["test-nikto-scan"]
-},
-{
-  "_id": "req-outdated-software",
-  "description": "Identify and update outdated server software or libraries",
-  "fix_suggestion": "Patch or upgrade server software and third-party libraries flagged as outdated",
-  "rule_ids": ["gdpr-32", "dpdp-8-6"],
-  "test_ids": ["test-nikto-scan"]
-}
+    "_id": "req-dir-listing",
+    "description": "Disable directory listing on web servers",
+    "fix_suggestion": "Turn off autoindex / directory browsing in server config (e.g., Apache, Nginx)",
+    "rule_ids": ["gdpr-32", "dpdp-8-6"],
+    "test_ids": ["test-nikto-scan"]
+  },
+  {
+    "_id": "req-default-credentials",
+    "description": "Ensure no default credentials or sample applications are accessible",
+    "fix_suggestion": "Remove default admin accounts, sample apps, and change all factory-set passwords",
+    "rule_ids": ["gdpr-32", "dpdp-8-6"],
+    "test_ids": ["test-nikto-scan"]
+  },
+  {
+    "_id": "req-outdated-software",
+    "description": "Identify and update outdated server software or libraries",
+    "fix_suggestion": "Patch or upgrade server software and third-party libraries flagged as outdated",
+    "rule_ids": ["gdpr-32", "dpdp-8-6"],
+    "test_ids": ["test-nikto-scan"]
+  }
 ]

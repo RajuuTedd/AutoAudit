@@ -1,60 +1,3 @@
-// const Test = require("../models/testModel");
-// const Requirement = require("../models/requirementModel");
-// const Rule = require("../models/ruleModel");
-// const Regulation = require("../models/regulationModel");
-
-// exports.buildReport = async (results) => {
-//   const enrichedResults = [];
-
-//   for (const result of results) {
-//     if (result.status === "FAIL") {
-//       const test = await Test.findOne({ name: result.testName });
-//       if (!test) continue;
-
-//       const requirements = await Requirement.find({ test_ids: test._id });
-//       const enrichedViolations = [];
-
-//       for (let req of requirements) {
-//         const relatedRules = await Rule.find({ _id: { $in: req.rule_ids } });
-//         const ruleDetails = [];
-
-//         for (let rule of relatedRules) {
-//           const regulation = await Regulation.findById(rule.regulation_id);
-//           ruleDetails.push({
-//             regulation: regulation?.name || "Unknown",
-//             article: rule.article_number,
-//             ruleTitle: rule.title,
-//             ruleDesc: rule.description,
-//           });
-//         }
-
-//         enrichedViolations.push({
-//           requirement: req.description,
-//           fix: req.fix_suggestion,
-//           related_rules: ruleDetails,
-//         });
-//       }
-
-//       enrichedResults.push({
-//         ...result,
-//         violations: enrichedViolations,
-//       });
-//     } else {
-//       enrichedResults.push(result);
-//     }
-//   }
-
-//   return {
-//     reportGeneratedAt: new Date(),
-//     tests: enrichedResults,
-//     summary: {
-//       passed: enrichedResults.filter((r) => r.status === "PASS").length,
-//       failed: enrichedResults.filter((r) => r.status === "FAIL").length,
-//       total: enrichedResults.length,
-//     },
-//   };
-// };
-
 const Test = require("../models/testModel");
 const Requirement = require("../models/requirementModel");
 const Rule = require("../models/ruleModel");
@@ -64,6 +7,10 @@ exports.buildReport = async (results, options = {}) => {
   const enrichedTests = [];
   const flatViolations = [];
 
+  // De-duplication helpers
+  const seenRequirementIds = new Set();
+  let genericErrorViolationAdded = false;
+
   for (const result of results) {
     const testMeta = { testId: result.testId, testName: result.testName };
     const testBlock = { ...testMeta, status: result.status, details: result.details || {} };
@@ -71,13 +18,18 @@ exports.buildReport = async (results, options = {}) => {
     // --- ERROR tests: operational issue, no legal mapping ---
     if (result.status === "ERROR") {
       enrichedTests.push({ ...testBlock, error: result.details?.reason || "Unknown error" });
-      flatViolations.push({
-        requirement: "Test execution failed",
-        related_rules: [],
-        regulations: [],
-        suggested_fix:
-          "Verify domain reachability and external tool availability. Some sites block scanners (WAF/CDN)."
-      });
+
+      // Add a single generic "Test execution failed" violation once
+      if (!genericErrorViolationAdded) {
+        flatViolations.push({
+          requirement: "Test execution failed",
+          related_rules: [],
+          regulations: [],
+          suggested_fix:
+            "Verify domain reachability and external tool availability. Some sites block scanners (WAF/CDN)."
+        });
+        genericErrorViolationAdded = true;
+      }
       continue;
     }
 
@@ -95,6 +47,7 @@ exports.buildReport = async (results, options = {}) => {
       testDoc = await Test.findOne({ name: result.testName });
     }
 
+    // Always keep per-test block (even if we can't enrich)
     enrichedTests.push(testBlock);
     if (!testDoc) continue;
 
@@ -124,6 +77,11 @@ exports.buildReport = async (results, options = {}) => {
 
     // Build violation rows for this test
     for (const req of requirements) {
+      // De-duplicate the same requirement across multiple tests
+      if (req?._id && seenRequirementIds.has(req._id)) {
+        continue;
+      }
+
       const related_rules = [];
       const regsSet = new Set();
 
@@ -143,12 +101,13 @@ exports.buildReport = async (results, options = {}) => {
       }
 
       flatViolations.push({
-        // 👇 exactly what your table needs
         requirement: req.description,
         related_rules,
         regulations: Array.from(regsSet),
         suggested_fix: req.fix_suggestion || ""
       });
+
+      if (req?._id) seenRequirementIds.add(req._id);
     }
   }
 
@@ -161,9 +120,9 @@ exports.buildReport = async (results, options = {}) => {
       errors: enrichedTests.filter(t => t.status === "ERROR").length,
       total: enrichedTests.length
     },
-    // 👇 your UI should read directly from here
+    // De-duplicated violations list for the table UI
     violations: flatViolations,
-    // keep per-test blocks for drill‑down
+    // Per-test blocks for drill‑down
     tests: enrichedTests
   };
 };

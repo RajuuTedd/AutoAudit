@@ -12,7 +12,7 @@
     "name": "Accessibility Scan (axe)",
     "tool": "axe CLI",
     "command": "axe https://example.com --stdout",
-    "requirement_ids": ["req-image-alt", "req-contrast", "req-skip-link", "req-h1-heading", "req-form-labels", "req-aria-roles", "req-landmarks", "req-keyboard-focus"]
+    "requirement_ids": ["req-image-alt", "req-contrast", "req-aria-roles", "req-keyboard-focus"]
   },
 
   {

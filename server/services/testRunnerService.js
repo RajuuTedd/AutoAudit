@@ -9,6 +9,17 @@ const axeParser  = require("../parsers/axeParser");
 const niktoService = require("./niktoService");
 const niktoParser  = require("../parsers/niktoParser");
 
+const curlHeaderService = require("./curlHeaderService");
+const curlHeaderParser  = require("../parsers/curlHeaderParser");
+
+// Map curl header check "type" to a unique command regex for seed matching
+const CURL_TYPE_TO_REGEX = {
+  csp: /content-security-policy/i,
+  xfo: /x-frame-options/i,
+  xcto: /x-content-type-options/i,
+  referrer: /referrer-policy/i
+};
+
 /**
  * Attach DB test metadata (id + name) to a normalized result,
  * by matching the seed's `tool` or `command` (no hardcoded names).
@@ -16,11 +27,25 @@ const niktoParser  = require("../parsers/niktoParser");
 async function attachTestMeta(result, { toolLike, commandRegex }) {
   let testDoc = null;
 
-  if (toolLike) {
-    testDoc = await Test.findOne({ tool: { $regex: toolLike, $options: "i" } });
+  // Prefer matching by commandRegex first (more specific)
+  if (commandRegex) {
+    // If a real RegExp is provided, don't also pass $options (Mongo error: "options set in both $regex and $options")
+    const cmdQuery =
+      commandRegex instanceof RegExp
+        ? { command: commandRegex }
+        : { command: { $regex: commandRegex, $options: "i" } };
+
+    testDoc = await Test.findOne(cmdQuery);
   }
-  if (!testDoc && commandRegex) {
-    testDoc = await Test.findOne({ command: { $regex: commandRegex, $options: "i" } });
+
+  // Fallback to matching by tool name
+  if (!testDoc && toolLike) {
+    const toolQuery =
+      toolLike instanceof RegExp
+        ? { tool: toolLike }
+        : { tool: { $regex: toolLike, $options: "i" } };
+
+    testDoc = await Test.findOne(toolQuery);
   }
 
   if (testDoc) {
@@ -75,6 +100,34 @@ exports.runAllTests = async (url) => {
     results.push(niktoResult);
   } catch (e) {
     results.push({ status: "ERROR", details: { reason: e.message } });
+  }
+
+  // --- Curl Header Checks ---
+  try {
+    // Fetch headers once; reuse for each logical check
+    const headersData = await curlHeaderService.fetchHeaders(url);
+
+    for (const type of ["csp", "xfo", "xcto", "referrer"]) {
+      try {
+        let curlResult = curlHeaderParser.parse({ type, data: headersData });
+        // Attach the correct seed test by header type (no generic toolLike to avoid collisions)
+        curlResult = await attachTestMeta(curlResult, {
+          commandRegex: CURL_TYPE_TO_REGEX[type] || /curl/i
+        });
+        results.push(curlResult);
+      } catch (e) {
+        results.push({
+          status: "ERROR",
+          details: { reason: e.message || `curl ${type} check failed` }
+        });
+      }
+    }
+  } catch (e) {
+    // If fetching headers itself fails, record a single failure for visibility
+    results.push({
+      status: "ERROR",
+      details: { reason: e.message || "curl header fetch failed" }
+    });
   }
 
   return results;

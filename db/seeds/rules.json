@@ -90,52 +90,12 @@
     "requirement_ids": ["req-image-alt"]
   },
   {
-    "_id": "wcag-1-3-1",
-    "regulation_id": "wcag",
-    "article_number": "1.3.1",
-    "title": "Info and Relationships",
-    "description": "Information and relationships conveyed through presentation can be programmatically determined.",
-    "requirement_ids": ["req-landmarks", "req-form-labels"]
-  },
-  {
     "_id": "wcag-2-1-1",
     "regulation_id": "wcag",
     "article_number": "2.1.1",
     "title": "Keyboard",
     "description": "All functionality is operable through a keyboard interface.",
     "requirement_ids": ["req-keyboard-focus"]
-  },
-  {
-    "_id": "wcag-2-4-1",
-    "regulation_id": "wcag",
-    "article_number": "2.4.1",
-    "title": "Bypass Blocks",
-    "description": "A mechanism is available to bypass blocks of content that are repeated.",
-    "requirement_ids": ["req-skip-link"]
-  },
-  {
-    "_id": "wcag-2-4-6",
-    "regulation_id": "wcag",
-    "article_number": "2.4.6",
-    "title": "Headings and Labels",
-    "description": "Headings and labels describe topic or purpose.",
-    "requirement_ids": ["req-h1-heading", "req-form-labels"]
-  },
-  {
-    "_id": "wcag-2-4-7",
-    "regulation_id": "wcag",
-    "article_number": "2.4.7",
-    "title": "Focus Visible",
-    "description": "Any keyboard operable user interface has a mode of operation where the keyboard focus indicator is visible.",
-    "requirement_ids": ["req-keyboard-focus"]
-  },
-  {
-    "_id": "wcag-3-3-2",
-    "regulation_id": "wcag",
-    "article_number": "3.3.2",
-    "title": "Labels or Instructions",
-    "description": "Labels or instructions are provided when content requires user input.",
-    "requirement_ids": ["req-form-labels"]
   },
   {
     "_id": "wcag-4-1-2",
