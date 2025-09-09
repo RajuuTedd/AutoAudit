@@ -1,7 +1,9 @@
+// /server/index.js
 const express = require("express");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const path = require("path");
+const cors = require("cors");
 
 dotenv.config({ path: path.join(__dirname, ".env") });
 
@@ -9,6 +11,8 @@ const scanRoutes = require("./routes/scanRoutes");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+app.use(cors());
 
 // Middleware
 app.use(express.json());
