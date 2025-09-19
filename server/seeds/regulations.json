@@ -1,0 +1,23 @@
+[
+  {
+    "_id": "gdpr",
+    "name": "General Data Protection Regulation",
+    "jurisdiction": "European Union",
+    "version": "2016/679",
+    "description": "EU-wide privacy and data protection law"
+  },
+  {
+    "_id": "dpdp",
+    "name": "Digital Personal Data Protection Act",
+    "jurisdiction": "India",
+    "version": "2023",
+    "description": "India’s law for personal data protection"
+  },
+  {
+    "_id": "wcag",
+    "name": "Web Content Accessibility Guidelines",
+    "jurisdiction": "Global",
+    "version": "2.1",
+    "description": "International guidelines for making web content accessible"
+  }
+]

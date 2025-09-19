@@ -1,0 +1,116 @@
+[
+  {
+    "_id": "gdpr-5-1-f",
+    "regulation_id": "gdpr",
+    "article_number": "5(1)(f)",
+    "title": "Integrity and confidentiality",
+    "description": "Data must be processed securely to prevent unauthorized processing and accidental loss.",
+    "requirement_ids": ["req-https", "req-secure-cookies", "req-hsts", "req-tls12", "req-csp", "req-xfo", "req-xcto", "req-referrer"]
+  },
+  {
+    "_id": "gdpr-32",
+    "regulation_id": "gdpr",
+    "article_number": "32",
+    "title": "Security of processing",
+    "description": "Appropriate technical and organizational measures to ensure a level of security appropriate to the risk.",
+    "requirement_ids": [
+      "req-https",
+      "req-encryption",
+      "req-csp",
+      "req-vulnerability-scan",
+      "req-hsts",
+      "req-tls12",
+      "req-secure-cookies",
+      "req-server-version",
+      "req-dir-listing",
+      "req-default-credentials",
+      "req-outdated-software"
+    ]
+  },
+  {
+    "_id": "gdpr-12",
+    "regulation_id": "gdpr",
+    "article_number": "12",
+    "title": "Transparent information",
+    "description": "Provide information to data subjects in a concise, intelligible and accessible form.",
+    "requirement_ids": ["req-privacy-link-visible"]
+  },
+  {
+    "_id": "gdpr-13-1-a",
+    "regulation_id": "gdpr",
+    "article_number": "13(1)(a)",
+    "title": "Controller identity and contact",
+    "description": "Identify the controller and provide contact details.",
+    "requirement_ids": ["req-privacy-controller-identity"]
+  },
+  {
+    "_id": "gdpr-13-1-e",
+    "regulation_id": "gdpr",
+    "article_number": "13(1)(e)",
+    "title": "Recipients of personal data",
+    "description": "Indicate recipients or categories of recipients of personal data.",
+    "requirement_ids": ["req-privacy-data-sharing"]
+  },
+  {
+    "_id": "dpdp-7-1",
+    "regulation_id": "dpdp",
+    "article_number": "7(1)",
+    "title": "Notice obligations",
+    "description": "Data fiduciaries must give notice to data principals.",
+    "requirement_ids": ["req-privacy-policy", "req-privacy-link-visible", "req-privacy-controller-identity", "req-privacy-data-sharing"]
+  },
+  {
+    "_id": "dpdp-8-5",
+    "regulation_id": "dpdp",
+    "article_number": "8(5)",
+    "title": "Reasonable security safeguards",
+    "description": "Ensure protection of personal data against breaches.",
+    "requirement_ids": ["req-https", "req-secure-cookies", "req-encryption", "req-hsts", "req-tls12"]
+  },
+  {
+    "_id": "dpdp-8-6",
+    "regulation_id": "dpdp",
+    "article_number": "8(6)",
+    "title": "Security audits",
+    "description": "Conduct periodic technical and compliance audits.",
+    "requirement_ids": [
+      "req-vulnerability-scan",
+      "req-server-version",
+      "req-dir-listing",
+      "req-default-credentials",
+      "req-outdated-software"
+    ]
+  },
+  {
+    "_id": "wcag-1-1-1",
+    "regulation_id": "wcag",
+    "article_number": "1.1.1",
+    "title": "Non-text Content",
+    "description": "Provide text alternatives for non-text content.",
+    "requirement_ids": ["req-image-alt"]
+  },
+  {
+    "_id": "wcag-2-1-1",
+    "regulation_id": "wcag",
+    "article_number": "2.1.1",
+    "title": "Keyboard",
+    "description": "All functionality is operable through a keyboard interface.",
+    "requirement_ids": ["req-keyboard-focus"]
+  },
+  {
+    "_id": "wcag-4-1-2",
+    "regulation_id": "wcag",
+    "article_number": "4.1.2",
+    "title": "Name, Role, Value",
+    "description": "For all user interface components, the name and role can be programmatically determined.",
+    "requirement_ids": ["req-aria-roles"]
+  },
+  {
+    "_id": "wcag-1-4-3",
+    "regulation_id": "wcag",
+    "article_number": "1.4.3",
+    "title": "Contrast (Minimum)",
+    "description": "Text must have sufficient contrast ratio.",
+    "requirement_ids": ["req-contrast"]
+  }
+]
