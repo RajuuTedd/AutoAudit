@@ -67,9 +67,11 @@ const AutoAuditApp: React.FC = () => {
 
     try {
       // FIX: Replace the simulated API call with the real backend endpoint.
-      const response = await fetch(
-        `http://localhost:3000/api/scan?url=${encodeURIComponent(url)}`
-      );
+      const response = await fetch("http://localhost:3000/api/scan", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ target: url.trim() })
+      });
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }

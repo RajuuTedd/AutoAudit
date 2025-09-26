@@ -1,5 +1,5 @@
 const { v4: uuid } = require("uuid");
-const { runCypher } = require("../graph/neo4j/neo4j.js");
+const { run, runFileMany } = require("../graph/neo4j/neo4j");
 
 const axeService = require("./axeService");
 const sslLabsService = require("./sslLabsService");
@@ -16,32 +16,43 @@ const ingestNikto = require("../graph/ingest/nikto");
 const fs = require("fs");
 const path = require("path");
 
+function normalizeTarget(input) {
+  if (!input) return null;
+  let t = String(input).trim().replace(/^['"]|['"]$/g, "");
+  if (!/^https?:\/\//i.test(t)) t = `https://${t}`;
+  try { new URL(t); return t; } catch { return null; }
+}
+
 async function runScan(targetUrl) {
+  const target = normalizeTarget(targetUrl);
+  if (!target) throw new Error("Invalid target URL");
+
   const scanId = uuid();
 
-  await runCypher(
-    `CREATE (:Scan {id: $scanId, target: $targetUrl, createdAt: datetime()})`,
-    { scanId, targetUrl }
+  await run(
+    `MERGE (s:Scan {id: $scanId})
+           ON CREATE SET s.createdAt = datetime(), s.target = $target
+           ON MATCH  SET s.target = $target`,
+    { scanId, target }
   );
 
-  const axeResults = await axeService.runScan(targetUrl);
-  const sslResults = await sslLabsService.runScan(targetUrl);
-  const headerResults = await curlHeaderService.fetchHeaders(targetUrl);
-  const policyResults = await policyParserService.runScan(targetUrl);
-  const niktoResults = await niktoService.runScan(targetUrl);
+  const axeResults = await axeService.runScan(target);
+  const sslResults = await sslLabsService.runScan(target);
+  const headerResults = await curlHeaderService.fetchHeaders(target);
+  const policyResults = await policyParserService.runScan(target);
+  const niktoResults = await niktoService.runScan(target);
 
   await ingestAxe(scanId, axeResults);
   await ingestSSL(scanId, sslResults);
-  await ingestHeaders(scanId, headerResults);
+  await ingestHeaders(scanId, headerResults, target); // pass fallback target here
   await ingestCookies(scanId, policyResults);
   await ingestNikto(scanId, niktoResults);
 
   const mappingDir = path.join(__dirname, "../cypher/mapping");
-  const files = fs.readdirSync(mappingDir);
+  const files = fs.readdirSync(mappingDir).filter(f => f.endsWith('.cypher'));
 
   for (const file of files) {
-    const query = fs.readFileSync(path.join(mappingDir, file), "utf8");
-    await runCypher(query, { scanId });
+    await runFileMany(path.join(mappingDir, file), { scanId });
   }
 
   return { scanId };
