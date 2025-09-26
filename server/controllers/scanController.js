@@ -111,48 +111,38 @@
 const testRunnerService = require("../services/testRunnerService");
 const reportBuilderService = require("../services/reportBuilderService");
 const reportKG = require("../services/reportKG");
-const { runScan } = require("../services/scanPipeline");
+const { runScan: runKgPipeline } = require("../services/scanPipeline");
 
+// Legacy path: run classic toolrunner + Mongo-style report builder, return report
 exports.runScan = async (req, res) => {
   try {
-    const { url } = req.query;
-    if (!url) return res.status(400).json({ error: "URL is required" });
+    const target = req.body?.target || req.query?.url;
+    if (!target) return res.status(400).json({ error: "Target is required" });
 
-    // Run all tests (SSL Labs now, more later)
-    const results = await testRunnerService.runAllTests(url);
-
-    // Build final report with DB enrichment
-    const report = await reportBuilderService.buildReport(results, { url });
-
+    // Run legacy tool pipeline and build legacy-format report
+    const results = await testRunnerService.runAllTests(target);
+    const report = await reportBuilderService.buildReport(results, { target });
     return res.json(report);
   } catch (err) {
-    console.error("❌ Scan Error:", err.message);
+    console.error("❌ Legacy Scan Error:", err.message);
     return res.status(500).json({ error: err.message || "Scan failed" });
   }
 };
 
-//the kg report
-
+// KG path: run Neo4j pipeline and build KG-backed report, return report
 exports.startScan = async (req, res) => {
   try {
-    const { target } = req.body;
+    const { target } = req.body || {};
     if (!target) return res.status(400).json({ error: "Target is required" });
 
-    const { scanId } = await runScan(target); // 👈 now this exists
-    res.json({ scanId });
+    // Orchestrate KG scan to generate Findings/Evidence and return scanId
+    const { scanId } = await runKgPipeline(target);
+
+    // Immediately build and return the KG report for this scan
+    const report = await reportKG.buildReport(scanId);
+    return res.json(report);
   } catch (err) {
     console.error("❌ KG Scan Error:", err.message);
     return res.status(500).json({ error: err.message || "KG Scan failed" });
-  }
-};
-
-exports.getReport = async (req, res) => {
-  try {
-    const { scanId } = req.params;
-    const report = await reportKG.buildReport(scanId); // 👈 use unified report builder
-    res.json(report);
-  } catch (err) {
-    console.error("❌ Report Error:", err.message);
-    res.status(500).json({ error: err.message || "Failed to fetch report" });
   }
 };
