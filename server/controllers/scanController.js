@@ -110,6 +110,8 @@
 // scanController is now refacotored it is now in sslLabsParser, testRunnerService and ssLabsService
 const testRunnerService = require("../services/testRunnerService");
 const reportBuilderService = require("../services/reportBuilderService");
+const reportKG = require("../services/reportKG");
+const { runScan } = require("../services/scanPipeline");
 
 exports.runScan = async (req, res) => {
   try {
@@ -126,5 +128,31 @@ exports.runScan = async (req, res) => {
   } catch (err) {
     console.error("❌ Scan Error:", err.message);
     return res.status(500).json({ error: err.message || "Scan failed" });
+  }
+};
+
+//the kg report
+
+exports.startScan = async (req, res) => {
+  try {
+    const { target } = req.body;
+    if (!target) return res.status(400).json({ error: "Target is required" });
+
+    const { scanId } = await runScan(target); // 👈 now this exists
+    res.json({ scanId });
+  } catch (err) {
+    console.error("❌ KG Scan Error:", err.message);
+    return res.status(500).json({ error: err.message || "KG Scan failed" });
+  }
+};
+
+exports.getReport = async (req, res) => {
+  try {
+    const { scanId } = req.params;
+    const report = await reportKG.buildReport(scanId); // 👈 use unified report builder
+    res.json(report);
+  } catch (err) {
+    console.error("❌ Report Error:", err.message);
+    res.status(500).json({ error: err.message || "Failed to fetch report" });
   }
 };

@@ -1,17 +1,18 @@
-// server/graph/neo4j.js
-// Lightweight Neo4j client for AutoAudit (Aura or local). CommonJS module.
+// server/graph//neo4j/neo4j.js
 
 let dotenvLoaded = false;
 try {
-  const path = require('path');
-  const envPath = path.join(__dirname, '..', '.env'); // server/.env
-  require('dotenv').config({ path: envPath });
+  const path = require("path");
+  const envPath = path.join(__dirname, "..", ".env"); // server/.env
+  require("dotenv").config({ path: envPath });
   dotenvLoaded = true;
-} catch (_) { /* optional */ }
+} catch (_) {
+  /* optional */
+}
 
-const fs = require('fs');
-const path = require('path');
-const neo4j = require('neo4j-driver');
+const fs = require("fs");
+const path = require("path");
+const neo4j = require("neo4j-driver");
 
 const NEO4J_URI = process.env.NEO4J_URI;
 const NEO4J_USERNAME = process.env.NEO4J_USERNAME;
@@ -19,12 +20,16 @@ const NEO4J_PASSWORD = process.env.NEO4J_PASSWORD;
 
 function assertEnv() {
   const missing = [];
-  if (!NEO4J_URI) missing.push('NEO4J_URI');
-  if (!NEO4J_USERNAME) missing.push('NEO4J_USERNAME');
-  if (!NEO4J_PASSWORD) missing.push('NEO4J_PASSWORD');
+  if (!NEO4J_URI) missing.push("NEO4J_URI");
+  if (!NEO4J_USERNAME) missing.push("NEO4J_USERNAME");
+  if (!NEO4J_PASSWORD) missing.push("NEO4J_PASSWORD");
   if (missing.length) {
-    const prefix = dotenvLoaded ? '' : '\n(Hint: install and configure dotenv or set real env vars)\n';
-    throw new Error(`Missing required env vars for Neo4j: ${missing.join(', ')}${prefix}`);
+    const prefix = dotenvLoaded
+      ? ""
+      : "\n(Hint: install and configure dotenv or set real env vars)\n";
+    throw new Error(
+      `Missing required env vars for Neo4j: ${missing.join(", ")}${prefix}`
+    );
   }
 }
 
@@ -35,9 +40,13 @@ const driver = neo4j.driver(
   NEO4J_URI,
   neo4j.auth.basic(NEO4J_USERNAME, NEO4J_PASSWORD),
   // Aura requires encrypted connection; fall back for local bolt if needed
-  NEO4J_URI.startsWith('neo4j+s://') || NEO4J_URI.startsWith('bolt+s://')
-    ? { /* encrypted by default */ }
-    : { /* local dev */ }
+  NEO4J_URI.startsWith("neo4j+s://") || NEO4J_URI.startsWith("bolt+s://")
+    ? {
+        /* encrypted by default */
+      }
+    : {
+        /* local dev */
+      }
 );
 
 /**
@@ -75,8 +84,10 @@ async function runTx(work) {
  * @param {object} [params]
  */
 async function runFile(filePath, params = {}) {
-  const abs = path.isAbsolute(filePath) ? filePath : path.join(process.cwd(), filePath);
-  const cypher = fs.readFileSync(abs, 'utf8');
+  const abs = path.isAbsolute(filePath)
+    ? filePath
+    : path.join(process.cwd(), filePath);
+  const cypher = fs.readFileSync(abs, "utf8");
   return run(cypher, params);
 }
 
@@ -87,13 +98,15 @@ async function runFile(filePath, params = {}) {
  * @param {object} [params]
  */
 async function runFileMany(filePath, params = {}) {
-  const abs = path.isAbsolute(filePath) ? filePath : path.join(process.cwd(), filePath);
-  const content = fs.readFileSync(abs, 'utf8');
+  const abs = path.isAbsolute(filePath)
+    ? filePath
+    : path.join(process.cwd(), filePath);
+  const content = fs.readFileSync(abs, "utf8");
   const statements = content
-    .split(';')
-    .map(s => s.trim())
-    .filter(s => s.length > 0);
-  return runTx(async tx => {
+    .split(";")
+    .map((s) => s.trim())
+    .filter((s) => s.length > 0);
+  return runTx(async (tx) => {
     for (const statement of statements) {
       await tx.run(statement, params);
     }
@@ -101,6 +114,12 @@ async function runFileMany(filePath, params = {}) {
 }
 
 /** Close the driver (call on server shutdown) */
-async function close() { await driver.close(); }
+async function close() {
+  await driver.close();
+}
 
-module.exports = { driver, run, runTx, runFile, runFileMany, close };
+async function runCypher(cypher, params = {}) {
+  return run(cypher, params);
+}
+
+module.exports = { driver, run, runCypher, runTx, runFile, runFileMany, close };
