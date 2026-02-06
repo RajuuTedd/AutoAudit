@@ -13,13 +13,14 @@
   "description": "",
   "dependencies": {
     "@google/genai": "^1.17.0",
+    "axe-core": "^4.11.1",
     "axios": "^1.11.0",
     "cors": "^2.8.5",
     "dotenv": "^17.2.1",
     "express": "^5.1.0",
     "mongoose": "^8.17.0",
     "neo4j-driver": "~5.28.0",
-    "puppeteer": "^24.19.0",
+    "puppeteer": "^24.37.2",
     "uuid": "^13.0.0"
   },
   "devDependencies": {

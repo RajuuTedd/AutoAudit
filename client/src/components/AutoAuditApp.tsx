@@ -70,7 +70,7 @@ const AutoAuditApp: React.FC = () => {
       const response = await fetch("http://localhost:3000/api/scan", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ target: url.trim() })
+        body: JSON.stringify({ target: url.trim() }),
       });
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
@@ -365,7 +365,8 @@ const AutoAuditApp: React.FC = () => {
                             </TableCell>
                             <TableCell>
                               <div className="flex flex-wrap gap-1">
-                                {violation.regulations.map((reg, i) => {
+                                {/* ✅ FIX: Use 'violation.regulations || []' to ensure mapping over an array */}
+                                {(violation.regulations || []).map((reg, i) => {
                                   // Assign custom colors per regulation
                                   let colorClass = "bg-gray-200 text-gray-800";
                                   if (reg.toLowerCase().includes("gdpr"))
