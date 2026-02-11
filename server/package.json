@@ -18,6 +18,8 @@
     "cors": "^2.8.5",
     "dotenv": "^17.2.1",
     "express": "^5.1.0",
+    "jspdf": "^4.1.0",
+    "jspdf-autotable": "^5.0.7",
     "mongoose": "^8.17.0",
     "neo4j-driver": "~5.28.0",
     "puppeteer": "^24.37.2",

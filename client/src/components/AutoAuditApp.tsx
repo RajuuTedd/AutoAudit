@@ -26,6 +26,9 @@ import { cn } from "@/lib/utils";
 import { GradualSpacing } from "@/components/ui/gradual-spacing";
 import GradientText from "./GradientText";
 
+import jsPDF from "jspdf";
+import "jspdf-autotable";
+
 interface ReportData {
   reportGeneratedAt: string;
   url: string;
@@ -136,12 +139,28 @@ const AutoAuditApp: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [reportData, setReportData] = useState<ReportData | null>(null);
 
+  // Progress Stepper State
+  const [activeStep, setActiveStep] = useState(0);
+  const steps = [
+    "Analyzing SSL/TLS Configuration",
+    "Scanning Accessibility (Axe-Core)",
+    "Checking Security Headers",
+    "Parsing Privacy Policy",
+    "Building Knowledge Graph Relations",
+  ];
+
   const handleScan = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!url.trim()) return;
 
     setIsLoading(true);
     setReportData(null);
+    setActiveStep(0);
+
+    // Simulated progress increment while the real fetch runs
+    const progressInterval = setInterval(() => {
+      setActiveStep((prev) => (prev < steps.length - 1 ? prev + 1 : prev));
+    }, 3000); // Change step every 3 seconds
 
     try {
       // FIX: Replace the simulated API call with the real backend endpoint.
@@ -182,6 +201,12 @@ const AutoAuditApp: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text);
+    // can trigger a toast here if you have sonner/toast installed
+    alert("Fix copied to clipboard!");
   };
 
   const getStatusIcon = (status: string) => {
@@ -358,8 +383,54 @@ const AutoAuditApp: React.FC = () => {
                 </CardContent>
               </Card>
             )}
-
             {isLoading && (
+              <Card className="glass glass-shadow border-border/50">
+                <CardContent className="p-12">
+                  <div className="max-w-md mx-auto space-y-8">
+                    <div className="flex flex-col items-center space-y-4">
+                      <div className="pulse-glow w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center">
+                        <Loader2 className="h-8 w-8 text-primary animate-spin" />
+                      </div>
+                      <h3 className="text-2xl font-bold">Auditing {url}</h3>
+                    </div>
+
+                    <div className="space-y-4">
+                      {steps.map((step, index) => (
+                        <div key={index} className="flex items-center gap-4">
+                          <div
+                            className={cn(
+                              "h-2 w-2 rounded-full transition-all duration-500",
+                              index === activeStep
+                                ? "bg-primary scale-150"
+                                : index < activeStep
+                                  ? "bg-success"
+                                  : "bg-muted",
+                            )}
+                          />
+                          <span
+                            className={cn(
+                              "text-sm font-medium transition-colors",
+                              index === activeStep
+                                ? "text-foreground"
+                                : "text-muted-foreground",
+                            )}
+                          >
+                            {step}
+                          </span>
+                          {index < activeStep && (
+                            <CheckCircle2 className="h-4 w-4 text-success ml-auto" />
+                          )}
+                          {index === activeStep && (
+                            <Loader2 className="h-3 w-3 text-primary animate-spin ml-auto" />
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+            {/* {isLoading && (
               <Card className="glass glass-shadow border-border/50">
                 <CardContent className="p-12 text-center">
                   <div className="space-y-6">
@@ -377,7 +448,7 @@ const AutoAuditApp: React.FC = () => {
                   </div>
                 </CardContent>
               </Card>
-            )}
+            )} */}
 
             {reportData && (
               <div className="space-y-6">
@@ -659,10 +730,51 @@ const AutoAuditApp: React.FC = () => {
                                   )}
                                 </TableCell>
 
-                                {/* Suggested Fix */}
+                                {/* Suggested Fix
                                 <TableCell className="text-sm text-muted-foreground whitespace-pre-wrap align-top">
                                   {v.requirement?.fix_suggestion ||
                                     "See requirement details and apply the recommended fix."}
+                                </TableCell> */}
+                                {/* Suggested Fix: requirement.fix_suggestion with Copy Button */}
+                                <TableCell className="text-sm text-muted-foreground align-top">
+                                  <div className="group relative bg-muted/20 p-3 rounded-md border border-border/40">
+                                    <div className="whitespace-pre-wrap pr-8">
+                                      {v.requirement?.fix_suggestion ||
+                                        "See requirement details."}
+                                    </div>
+                                    <Button
+                                      size="icon"
+                                      variant="ghost"
+                                      className="h-6 w-6 absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
+                                      onClick={() =>
+                                        copyToClipboard(
+                                          v.requirement?.fix_suggestion || "",
+                                        )
+                                      }
+                                    >
+                                      <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        width="14"
+                                        height="14"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        strokeWidth="2"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                      >
+                                        <rect
+                                          width="14"
+                                          height="14"
+                                          x="8"
+                                          y="8"
+                                          rx="2"
+                                          ry="2"
+                                        />
+                                        <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
+                                      </svg>
+                                    </Button>
+                                  </div>
                                 </TableCell>
                               </TableRow>
                             );
