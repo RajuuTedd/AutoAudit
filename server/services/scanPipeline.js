@@ -68,6 +68,18 @@ async function runScan(targetUrl) {
   );
 
   // 4. Run external tools
+  const results = {};
+
+  const runTool = async (name, serviceCall) => {
+    try {
+      console.log(`🚀 Starting ${name}...`);
+      return await serviceCall;
+    } catch (err) {
+      console.error(`❌ Tool ${name} failed:`, err.message);
+      return null; // Return null so ingestors can skip it
+    }
+  };
+
   const axeResults = await axeService.runScan(target);
   const sslResults = await sslLabsService.runScan(target);
   const headerResults = await curlHeaderService.fetchHeaders(target);

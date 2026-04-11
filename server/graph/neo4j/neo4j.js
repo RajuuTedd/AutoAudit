@@ -3,7 +3,7 @@
 let dotenvLoaded = false;
 try {
   const path = require("path");
-  const envPath = path.join(__dirname, "..", ".env"); // server/.env
+  const envPath = path.join(__dirname, "..", "..", ".env"); // server/.env
   require("dotenv").config({ path: envPath });
   dotenvLoaded = true;
 } catch (_) {
@@ -28,7 +28,7 @@ function assertEnv() {
       ? ""
       : "\n(Hint: install and configure dotenv or set real env vars)\n";
     throw new Error(
-      `Missing required env vars for Neo4j: ${missing.join(", ")}${prefix}`
+      `Missing required env vars for Neo4j: ${missing.join(", ")}${prefix}`,
     );
   }
 }
@@ -46,7 +46,7 @@ const driver = neo4j.driver(
       }
     : {
         /* local dev */
-      }
+      },
 );
 
 /**

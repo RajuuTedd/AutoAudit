@@ -1,15 +1,13 @@
-
-
 // server/scripts/seedNeo4jFromJson.js
 // Imports JSON seeds from server/seeds/*.json into Neo4j (Aura or local)
 
-const fs = require('fs');
-const path = require('path');
-const { runTx, close } = require('../graph/neo4j');
+const fs = require("fs");
+const path = require("path");
+const { runTx, close } = require("../graph/neo4j/neo4j");
 
 function readJson(relPath) {
-  const abs = path.join(__dirname, '..', 'seeds', relPath);
-  const raw = fs.readFileSync(abs, 'utf8');
+  const abs = path.join(__dirname, "..", "seeds", relPath);
+  const raw = fs.readFileSync(abs, "utf8");
   const data = JSON.parse(raw);
   if (!Array.isArray(data)) {
     throw new Error(`Expected array in ${relPath}, got ${typeof data}`);
@@ -18,11 +16,11 @@ function readJson(relPath) {
 }
 
 (async () => {
-  console.log('🔧 Loading seed files from server/seeds ...');
-  const regulations = readJson('regulations.json');
-  const rules = readJson('rules.json');
-  const requirements = readJson('requirements.json');
-  const tests = readJson('tests.json');
+  console.log("🔧 Loading seed files from server/seeds ...");
+  const regulations = readJson("regulations.json");
+  const rules = readJson("rules.json");
+  const requirements = readJson("requirements.json");
+  const tests = readJson("tests.json");
 
   console.log(`• Regulations: ${regulations.length}`);
   console.log(`• Rules:       ${rules.length}`);
@@ -43,7 +41,7 @@ function readJson(relPath) {
           n.version = coalesce(r.version, n.version),
           n.description = coalesce(r.description, n.description)
         `,
-        { regs: regulations }
+        { regs: regulations },
       );
 
       // 2) Rules + UNDER relation to Regulation
@@ -60,7 +58,7 @@ function readJson(relPath) {
         MATCH (reg:Regulation {id: rl.regulation_id})
         MERGE (rule)-[:UNDER]->(reg)
         `,
-        { rules }
+        { rules },
       );
 
       // 3) Requirements + PART_OF link(s) to Rule(s)
@@ -79,7 +77,7 @@ function readJson(relPath) {
         MATCH (rule:Rule {id: rid})
         MERGE (req)-[:PART_OF]->(rule)
         `,
-        { reqs: requirements }
+        { reqs: requirements },
       );
 
       // 4) Tests
@@ -93,7 +91,7 @@ function readJson(relPath) {
           test.tool = coalesce(t.tool, test.tool),
           test.command = coalesce(t.command, test.command)
         `,
-        { tests }
+        { tests },
       );
 
       // 5) Requirement  → TESTED_BY → Test (from requirements.test_ids)
@@ -105,7 +103,7 @@ function readJson(relPath) {
         MATCH (test:Test {id: tid})
         MERGE (req)-[:TESTED_BY]->(test)
         `,
-        { reqs: requirements }
+        { reqs: requirements },
       );
 
       // 6) Reinforce from tests.requirement_ids (in case seeds declare coverage here too)
@@ -117,13 +115,13 @@ function readJson(relPath) {
         MATCH (req:Requirement {id: qid})
         MERGE (req)-[:TESTED_BY]->(test)
         `,
-        { tests }
+        { tests },
       );
     });
 
-    console.log('✅ Seed data imported into Neo4j successfully.');
+    console.log("✅ Seed data imported into Neo4j successfully.");
   } catch (err) {
-    console.error('❌ Failed to seed Neo4j:', err);
+    console.error("❌ Failed to seed Neo4j:", err);
     process.exitCode = 1;
   } finally {
     await close();

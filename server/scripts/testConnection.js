@@ -1,4 +1,4 @@
-const { run, runFileMany, close } = require("../graph/neo4j");
+const { run, runFileMany, close } = require("../graph/neo4j/neo4j");
 
 (async () => {
   try {
