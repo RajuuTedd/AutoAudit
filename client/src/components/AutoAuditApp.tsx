@@ -21,13 +21,18 @@ import {
   CheckCircle2,
   XCircle,
   Clock,
+  Download,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { GradualSpacing } from "@/components/ui/gradual-spacing";
 import GradientText from "./GradientText";
 
+import { useNavigate } from "react-router-dom";
+
 import jsPDF from "jspdf";
 import "jspdf-autotable";
+import { generatePDFReport } from "../utils/reportGenerator";
+import { useToast } from "../hooks/use-toast";
 
 interface ReportData {
   reportGeneratedAt: string;
@@ -138,6 +143,9 @@ const AutoAuditApp: React.FC = () => {
   const [url, setUrl] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [reportData, setReportData] = useState<ReportData | null>(null);
+  const [results, setResults] = useState([]); // findings array for the pdf
+  const { toast } = useToast();
+  const navigate = useNavigate();
 
   // Progress Stepper State
   const [activeStep, setActiveStep] = useState(0);
@@ -240,6 +248,21 @@ const AutoAuditApp: React.FC = () => {
     );
   };
 
+  const handleDownload = () => {
+    // Check reportData instead of results
+    if (!reportData || reportData.violations.length === 0) {
+      toast({
+        variant: "destructive",
+        title: "No data available",
+        description: "Please run a scan first to generate a report.",
+      });
+      return;
+    }
+
+    // Pass the actual violations and URL from reportData
+    generatePDFReport(reportData.url, reportData.violations);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-subtle relative">
       <AnimatedGridPattern
@@ -265,19 +288,20 @@ const AutoAuditApp: React.FC = () => {
             <div className="hidden md:flex items-center space-x-6">
               <a
                 href="#features"
-                className="text-sm text-muted-foreground hover:text-foreground transition-fast"
+                className="text-sm text-muted-foreground hover:text-foreground"
               >
                 Features
               </a>
-              <a
-                href="#pricing"
-                className="text-sm text-muted-foreground hover:text-foreground transition-fast"
+              {/* Add this Link */}
+              <button
+                onClick={() => navigate("/stats")}
+                className="text-sm font-medium text-primary hover:underline"
               >
-                Stats
-              </a>
+                Research Stats
+              </button>
               <a
                 href="#contact"
-                className="text-sm text-muted-foreground hover:text-foreground transition-fast"
+                className="text-sm text-muted-foreground hover:text-foreground"
               >
                 Contact
               </a>
@@ -456,7 +480,18 @@ const AutoAuditApp: React.FC = () => {
                 <Card className="glass glass-shadow border-border/50">
                   <CardHeader>
                     <CardTitle className="flex items-center justify-between">
-                      <span>Scan Summary</span>
+                      <div className="flex items-center gap-4">
+                        <span>Scan Summary</span>
+                        <Button
+                          onClick={handleDownload}
+                          variant="outline"
+                          size="sm"
+                          className="flex items-center gap-2 border-primary/50 hover:bg-primary/10"
+                        >
+                          <Download className="h-4 w-4" />
+                          Download PDF Report
+                        </Button>
+                      </div>
                       <span className="text-sm font-normal text-muted-foreground">
                         {new Date(
                           reportData.reportGeneratedAt,
