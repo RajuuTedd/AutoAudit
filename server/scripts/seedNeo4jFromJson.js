@@ -1,5 +1,4 @@
 // server/scripts/seedNeo4jFromJson.js
-// Imports JSON seeds from server/seeds/*.json into Neo4j (Aura or local)
 
 const fs = require("fs");
 const path = require("path");

@@ -12,7 +12,7 @@ const scanRoutes = require("./routes/scanRoutes");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(cors());
+app.use(cors({ origin: "*" }));
 
 // Middleware
 app.use(express.json());

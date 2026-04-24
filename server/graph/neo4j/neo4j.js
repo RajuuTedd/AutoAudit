@@ -94,7 +94,7 @@ async function runFile(filePath, params = {}) {
 /**
  * Execute a .cypher file containing multiple statements separated by semicolons.
  * Runs all statements in a single write transaction.
- * @param {string} filePath - absolute or relative to project root
+ * @param {string} filePath
  * @param {object} [params]
  */
 async function runFileMany(filePath, params = {}) {
@@ -113,7 +113,6 @@ async function runFileMany(filePath, params = {}) {
   });
 }
 
-/** Close the driver (call on server shutdown) */
 async function close() {
   await driver.close();
 }
