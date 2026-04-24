@@ -172,9 +172,13 @@ const AutoAuditApp: React.FC = () => {
 
     try {
       // FIX: Replace the simulated API call with the real backend endpoint.
+      const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:3000";
       const response = await fetch("http://localhost:3000/api/scan", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "ngrok-skip-browser-warning": "69420",
+        },
         body: JSON.stringify({ target: url.trim() }),
       });
       if (!response.ok) {
