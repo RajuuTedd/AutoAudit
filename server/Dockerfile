@@ -1,15 +1,13 @@
-# Use Debian-based Node image (required for installing apt packages)
-FROM node:18-bullseye
+# Upgrade to Bookworm (Debian 12) for much better package stability
+FROM node:18-bookworm
 
-# Update apt and install all required system dependencies
-# This includes Nikto, Curl, Perl, and Chromium (for Puppeteer/Axe)
-RUN apt-get update && apt-get install -y \
+# Update apt and install only the core required system dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
     nikto \
     curl \
     perl \
     chromium \
-    fonts-ipafont-gothic fonts-wqy-zenhei fonts-thai-tlwg fonts-kacst fonts-freefont-ttf libxss1 \
-    --no-install-recommends \
+    ca-certificates \
     && rm -rf /var/lib/apt/lists/*
 
 # Set the working directory
@@ -22,7 +20,7 @@ RUN npm install
 # Copy the rest of your backend code
 COPY . .
 
-# Expose the port (Render defaults to 10000, but 5000 is fine)
+# Expose the port 
 EXPOSE 5000
 
 # Start the application
