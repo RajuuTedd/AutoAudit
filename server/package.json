@@ -23,7 +23,7 @@
     "mongoose": "^8.17.0",
     "neo4j-driver": "~5.28.0",
     "puppeteer": "^24.37.2",
-    "uuid": "^13.0.0"
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "@axe-core/cli": "^4.10.2",
