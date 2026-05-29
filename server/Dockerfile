@@ -1,8 +1,11 @@
 # Use Bookworm (Debian 12) base
 FROM node:18-bookworm
 
-# 1. Install Nikto, Curl, Perl, and tools needed to fetch Chrome
-RUN apt-get update && apt-get install -y --no-install-recommends \
+# 1. Force IPv4, wipe old cache, and install base tools
+# The -o Acquire::ForceIPv4=true flag forces a stable network connection
+RUN rm -rf /var/lib/apt/lists/* \
+    && apt-get -o Acquire::ForceIPv4=true update \
+    && apt-get -o Acquire::ForceIPv4=true install -y --no-install-recommends \
     nikto \
     curl \
     perl \
