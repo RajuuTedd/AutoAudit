@@ -12,6 +12,8 @@ RUN apt-get update --fix-missing \
         git \
         libnet-ssleay-perl \
         libwhisker2-perl \
+        libxml-writer-perl \
+        libjson-perl \
     && rm -rf /var/lib/apt/lists/*
 
 # 2. Install nikto from GitHub (official source, always available)
